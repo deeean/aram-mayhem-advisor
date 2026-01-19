@@ -1,0 +1,31 @@
+[package]
+name = "aram-mayhem-advisor"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+image = "0.25.9"
+ocr-rs = "2.0.2"
+serde = { version = "1.0.228", features = ["derive"] }
+serde_json = "1.0.149"
+strsim = "0.11.1"
+wry = "0.54.1"
+tao = "0.34.5"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62.2", features = [
+    "Win32_Graphics_Gdi",
+    "Win32_UI_WindowsAndMessaging",
+    "Win32_Foundation",
+    "Win32_System_LibraryLoader",
+    "Win32_System_Threading",
+    "Win32_System_ProcessStatus",
+] }
+
+reqwest = { version = "0.12", features = ["json", "rustls-tls"], default-features = false }
+
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time"] }
+tray-icon = "0.21.3"
+
+[build-dependencies]
+winresource = "0.1.29"

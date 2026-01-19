@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: rgba(5, 5, 5, 0.75);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --tier-s-plus: #11aaff;
+            --tier-s: #00cc99;
+            --tier-a: #ffcc00;
+            --tier-b: #eeeeee;
+            --tier-c: #ff7700;
+            --tier-d: #ff3333;
+            --tier-na: #666666;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: transparent;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            overflow: hidden;
+            user-select: none;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .card {
+            background: var(--bg-color);
+            border-radius: 12px;
+            padding: 16px;
+            width: 180px;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        /* Tier Header Section */
+        .header {
+            display: flex;
+            align-items: baseline;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            margin-bottom: 2px;
+        }
+
+        .tier {
+            font-size: 36px;
+            line-height: 1;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .tier-label {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .label {
+            font-size: 10px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .value {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 600;
+            font-feature-settings: "tnum";
+        }
+
+        .tier.s-plus {
+            color: var(--tier-s-plus);
+            text-shadow: 0 0 25px rgba(17, 170, 255, 0.6);
+        }
+
+        .tier.s {
+            color: var(--tier-s);
+            text-shadow: 0 0 20px rgba(0, 204, 153, 0.5);
+        }
+
+        .tier.a {
+            color: var(--tier-a);
+        }
+
+        .tier.b {
+            color: var(--tier-b);
+        }
+
+        .tier.c {
+            color: var(--tier-c);
+        }
+
+        .tier.d {
+            color: var(--tier-d);
+        }
+
+        .tier.na {
+            color: var(--tier-na);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card" id="card">
+        <div class="header">
+            <div id="tier" class="tier">-</div>
+            <div class="tier-label">TIER</div>
+        </div>
+
+        <div id="name" class="name">-</div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="label">PICK RATE</span>
+                <span id="pop" class="value">-</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">GAMES</span>
+                <span id="games" class="value">-</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getTierClass(tier) {
+            if (!tier) return 'na';
+            const t = tier.toUpperCase();
+            switch (t) {
+                case 'S+': return 's-plus';
+                case 'S': return 's';
+                case 'A': return 'a';
+                case 'B': return 'b';
+                case 'C': return 'c';
+                case 'D': return 'd';
+                default: return 'na';
+            }
+        }
+
+        window.updateCard = function (json) {
+            try {
+                const data = JSON.parse(json);
+                const tierClass = getTierClass(data.tier);
+                const tierEl = document.getElementById('tier');
+                tierEl.textContent = data.tier || '-';
+                tierEl.className = 'tier ' + tierClass;
+
+                document.getElementById('card').className = 'card ' + tierClass;
+                document.getElementById('name').textContent = data.name || '-';
+                document.getElementById('pop').textContent = data.popularity || '-';
+                document.getElementById('games').textContent = data.games || '-';
+            } catch (e) {
+                console.error('Update failed', e);
+            }
+        };
+    </script>
+</body>
+
+</html>
