@@ -1,5 +1,6 @@
 use tao::dpi::{PhysicalPosition, PhysicalSize};
 use tao::event_loop::EventLoopProxy;
+use tao::platform::windows::WindowBuilderExtWindows;
 use tao::window::WindowBuilder;
 use wry::WebViewBuilder;
 
@@ -58,12 +59,13 @@ impl Overlay {
                 let window = WindowBuilder::new()
                     .with_title("Augment Overlay")
                     .with_position(PhysicalPosition::new(0, 0))
-                    .with_inner_size(PhysicalSize::new(300u32, 300u32))
+                    .with_inner_size(PhysicalSize::new(300u32, 320u32))
                     .with_decorations(false)
                     .with_transparent(true)
                     .with_always_on_top(true)
                     .with_resizable(false)
                     .with_visible(false)
+                    .with_undecorated_shadow(false)
                     .build(&event_loop)
                     .expect("Failed to create window");
 
@@ -148,7 +150,7 @@ impl Overlay {
 }
 
 const OVERLAY_WIDTH: f32 = 300.0;
-const OVERLAY_HEIGHT: f32 = 300.0;
+const OVERLAY_HEIGHT: f32 = 320.0;
 
 pub fn calculate_card_positions() -> Option<[(i32, i32); 3]> {
     let game = get_lol_window()?;
@@ -167,11 +169,11 @@ pub fn calculate_card_positions() -> Option<[(i32, i32); 3]> {
 
     let gap = panel_w * CARD_GAP_RATIO;
     let card_width = (panel_w - gap * 2.0) / 3.0;
-    let bezel = card_width * CARD_BEZEL_RATIO;
 
     let center_x = |card_idx: f32| -> i32 {
-        (panel_x + card_idx * (card_width + gap) + card_width / 2.0 - OVERLAY_WIDTH / 2.0 - bezel / 4.0) as i32
+        (panel_x + card_idx * (card_width + gap) + card_width / 2.0 - OVERLAY_WIDTH / 2.0) as i32
     };
+
     let top_y = (panel_y - OVERLAY_HEIGHT / 2.0) as i32;
 
     Some([
@@ -191,7 +193,6 @@ pub fn calculate_card_positions_fullscreen() -> [(i32, i32); 3] {
     const PANEL_Y_RATIO: f32 = 0.1670;
     const PANEL_W_RATIO: f32 = 0.9528;
     const CARD_GAP_RATIO: f32 = 0.035;
-    const CARD_BEZEL_RATIO: f32 = 0.07;
 
     let panel_w = h * PANEL_W_RATIO;
     let panel_y = h * PANEL_Y_RATIO;
@@ -199,11 +200,11 @@ pub fn calculate_card_positions_fullscreen() -> [(i32, i32); 3] {
 
     let gap = panel_w * CARD_GAP_RATIO;
     let card_width = (panel_w - gap * 2.0) / 3.0;
-    let bezel = card_width * CARD_BEZEL_RATIO;
 
     let center_x = |card_idx: f32| -> i32 {
-        (panel_x + card_idx * (card_width + gap) + card_width / 2.0 - OVERLAY_WIDTH / 2.0 - bezel / 4.0) as i32
+        (panel_x + card_idx * (card_width + gap) + card_width / 2.0 - OVERLAY_WIDTH / 2.0) as i32
     };
+
     let top_y = (panel_y - OVERLAY_HEIGHT / 2.0) as i32;
 
     [

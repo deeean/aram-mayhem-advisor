@@ -2,7 +2,7 @@
 
 use std::time::{Duration, Instant};
 use ocr_rs::{OcrEngine, OcrEngineConfig};
-use aram_mayhem_advisor::{capture_augment_cards, capture::is_lol_foreground, data::{find_augment, Language, MAYHEM_DATA, extract_title_from_ocr, get_champion_name}, live_client::LiveClient, overlay::{Overlay, AugmentDisplay, ChampionStats, calculate_card_positions}, tray::{Tray, TrayCommand}};
+use aram_mayhem_advisor::{capture_augment_cards_fullscreen, overlay::calculate_card_positions_fullscreen, capture_augment_cards, capture::is_lol_foreground, data::{find_augment, Language, MAYHEM_DATA, extract_title_from_ocr, get_champion_name}, live_client::LiveClient, overlay::{Overlay, AugmentDisplay, ChampionStats, calculate_card_positions}, tray::{Tray, TrayCommand}};
 
 const POLL_INTERVAL: Duration = Duration::from_millis(1000);
 const CAPTURE_INTERVAL: Duration = Duration::from_millis(50);

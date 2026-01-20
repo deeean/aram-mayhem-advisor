@@ -30,9 +30,9 @@ pub fn get_screen_size() -> ScreenSize {
 fn create_bitmap_info(width: i32, height: i32) -> BITMAPINFO {
     let mut bmi: BITMAPINFOHEADER = unsafe { std::mem::zeroed() };
 
-    bmi.biSize = std::mem::size_of::<BITMAPINFOHEADER>() as u32;
+    bmi.biSize = size_of::<BITMAPINFOHEADER>() as u32;
     bmi.biWidth = width;
-    bmi.biHeight = -height; // top-down DIB
+    bmi.biHeight = -height;
     bmi.biPlanes = 1;
     bmi.biBitCount = 32;
     bmi.biCompression = BI_RGB.0;
