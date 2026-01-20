@@ -76,7 +76,7 @@ impl LiveClient {
     }
 
     pub fn is_mayhem_mode(game_data: &AllGameData) -> bool {
-        matches!(game_data.game_data.game_mode.as_str(), "ARAM" | "KIWI")
+        matches!(game_data.game_data.game_mode.as_str(), "KIWI")
     }
 }
 
