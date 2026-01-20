@@ -5,7 +5,7 @@ pub mod overlay;
 pub mod tray;
 
 use image::DynamicImage;
-use capture::{get_lol_window, capture_region};
+use capture::{get_lol_window, capture_region, capture_screen};
 
 const PANEL_Y_RATIO: f32 = 0.1670;
 const PANEL_H_RATIO: f32 = 0.4870;
@@ -55,6 +55,14 @@ pub fn capture_augment_cards() -> [Option<DynamicImage>; 3] {
         Some(img.crop_imm(card_width_full + gap + bezel, 0, card_width, text_height)),
         Some(img.crop_imm((card_width_full + gap) * 2 + bezel, 0, card_width, text_height)),
     ]
+}
+
+pub fn capture_augment_cards_fullscreen() -> [Option<DynamicImage>; 3] {
+    let Some(img) = capture_screen() else {
+        return [None, None, None];
+    };
+    let cards = crop_augment_cards(&img);
+    [Some(cards[0].clone()), Some(cards[1].clone()), Some(cards[2].clone())]
 }
 
 pub fn crop_augment_cards(img: &DynamicImage) -> [DynamicImage; 3] {

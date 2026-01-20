@@ -6,11 +6,20 @@ use wry::WebViewBuilder;
 use crate::capture::get_lol_window;
 
 #[derive(Clone, Debug, serde::Serialize)]
+pub struct ChampionStats {
+    pub name: String,
+    pub tier: String,
+    pub popularity: String,
+    pub games: i32,
+}
+
+#[derive(Clone, Debug, serde::Serialize)]
 pub struct AugmentDisplay {
     pub name: String,
     pub tier: String,
     pub popularity: String,
     pub games: i32,
+    pub champion: Option<ChampionStats>,
 }
 
 #[derive(Debug, Clone)]
@@ -49,7 +58,7 @@ impl Overlay {
                 let window = WindowBuilder::new()
                     .with_title("Augment Overlay")
                     .with_position(PhysicalPosition::new(0, 0))
-                    .with_inner_size(PhysicalSize::new(200u32, 150u32))
+                    .with_inner_size(PhysicalSize::new(300u32, 300u32))
                     .with_decorations(false)
                     .with_transparent(true)
                     .with_always_on_top(true)
@@ -138,6 +147,9 @@ impl Overlay {
     }
 }
 
+const OVERLAY_WIDTH: f32 = 300.0;
+const OVERLAY_HEIGHT: f32 = 300.0;
+
 pub fn calculate_card_positions() -> Option<[(i32, i32); 3]> {
     let game = get_lol_window()?;
 
@@ -147,6 +159,7 @@ pub fn calculate_card_positions() -> Option<[(i32, i32); 3]> {
     const PANEL_Y_RATIO: f32 = 0.1670;
     const PANEL_W_RATIO: f32 = 0.9528;
     const CARD_GAP_RATIO: f32 = 0.035;
+    const CARD_BEZEL_RATIO: f32 = 0.07;
 
     let panel_w = h * PANEL_W_RATIO;
     let panel_y = game.y as f32 + h * PANEL_Y_RATIO;
@@ -154,10 +167,48 @@ pub fn calculate_card_positions() -> Option<[(i32, i32); 3]> {
 
     let gap = panel_w * CARD_GAP_RATIO;
     let card_width = (panel_w - gap * 2.0) / 3.0;
+    let bezel = card_width * CARD_BEZEL_RATIO;
+
+    let center_x = |card_idx: f32| -> i32 {
+        (panel_x + card_idx * (card_width + gap) + card_width / 2.0 - OVERLAY_WIDTH / 2.0 - bezel / 4.0) as i32
+    };
+    let top_y = (panel_y - OVERLAY_HEIGHT / 2.0) as i32;
 
     Some([
-        ((panel_x + 8.0) as i32, (panel_y + 8.0) as i32),
-        ((panel_x + card_width + gap + 8.0) as i32, (panel_y + 8.0) as i32),
-        ((panel_x + (card_width + gap) * 2.0 + 8.0) as i32, (panel_y + 8.0) as i32),
+        (center_x(0.0), top_y),
+        (center_x(1.0), top_y),
+        (center_x(2.0), top_y),
     ])
+}
+
+pub fn calculate_card_positions_fullscreen() -> [(i32, i32); 3] {
+    use crate::capture::get_screen_size;
+
+    let screen = get_screen_size();
+    let h = screen.height as f32;
+    let w = screen.width as f32;
+
+    const PANEL_Y_RATIO: f32 = 0.1670;
+    const PANEL_W_RATIO: f32 = 0.9528;
+    const CARD_GAP_RATIO: f32 = 0.035;
+    const CARD_BEZEL_RATIO: f32 = 0.07;
+
+    let panel_w = h * PANEL_W_RATIO;
+    let panel_y = h * PANEL_Y_RATIO;
+    let panel_x = (w - panel_w) / 2.0;
+
+    let gap = panel_w * CARD_GAP_RATIO;
+    let card_width = (panel_w - gap * 2.0) / 3.0;
+    let bezel = card_width * CARD_BEZEL_RATIO;
+
+    let center_x = |card_idx: f32| -> i32 {
+        (panel_x + card_idx * (card_width + gap) + card_width / 2.0 - OVERLAY_WIDTH / 2.0 - bezel / 4.0) as i32
+    };
+    let top_y = (panel_y - OVERLAY_HEIGHT / 2.0) as i32;
+
+    [
+        (center_x(0.0), top_y),
+        (center_x(1.0), top_y),
+        (center_x(2.0), top_y),
+    ]
 }

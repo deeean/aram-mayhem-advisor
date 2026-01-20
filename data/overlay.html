@@ -1,88 +1,124 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@700;900&family=Inter:wght@900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: rgba(5, 5, 5, 0.75);
-            --border-color: rgba(255, 255, 255, 0.1);
-            --text-primary: #ffffff;
-            --text-secondary: #a0a0a0;
-            --tier-s-plus: #11aaff;
-            --tier-s: #00cc99;
-            --tier-a: #ffcc00;
-            --tier-b: #eeeeee;
-            --tier-c: #ff7700;
-            --tier-d: #ff3333;
-            --tier-na: #666666;
+            --bg-solid: rgba(0, 0, 0, 0.9);
+            --text-main: #ffffff;
+            --text-dim: #71717a;
+            --s-grad: linear-gradient(135deg, #FF9BD2 0%, #6B42DC 50%, #54ACEE 100%);
+            --s-glow: rgba(107, 66, 220, 0.7);
+            --a-tier: #ffcc00;
+            --b-tier: #e2e8f0;
+            --c-tier: #ff7700;
+            --d-tier: #ff4444;
+            --na-tier: #3f3f46;
         }
 
-        * {
+        *, *::before, *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            letter-spacing: normal !important;
+        }
+
+        html {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
         }
 
         body {
+            width: 100%;
+            height: 100%;
             background: transparent;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: 'Pretendard', sans-serif;
+            color: var(--text-main);
             overflow: hidden;
-            user-select: none;
-            -webkit-font-smoothing: antialiased;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-margin-start: 0;
+            -webkit-margin-end: 0;
         }
 
-        .card {
-            background: var(--bg-color);
-            border-radius: 12px;
-            padding: 16px;
-            width: 180px;
-            border: none;
+        .overlay-card {
+            width: 200px;
+            height: 250px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: var(--bg-solid);
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            transition: all 0.3s ease;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6),
+                        0 4px 16px rgba(0, 0, 0, 0.4);
         }
 
-        /* Tier Header Section */
-        .header {
+        .section {
+            flex: 1;
+            padding: 12px 14px;
             display: flex;
-            align-items: baseline;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .section-main {
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 8px;
-            margin-bottom: 2px;
         }
 
-        .tier {
-            font-size: 36px;
-            line-height: 1;
+        .section-sub {
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        .section-label {
+            font-size: 12px;
             font-weight: 800;
-            letter-spacing: -0.03em;
-            text-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-        }
-
-        .tier-label {
-            font-size: 11px;
-            font-weight: 600;
-            color: var(--text-secondary);
+            color: var(--text-dim);
+            margin-bottom: 4px;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
         }
 
-        .name {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            white-space: nowrap;
+        .row-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .tier-display {
+            font-family: 'Inter', sans-serif;
+            font-size: 32px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
+        .t-grad {
+            background: var(--s-grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 0 6px var(--s-glow));
+        }
+
+        .name-text {
+            font-size: 12px;
+            font-weight: 700;
+            text-align: right;
             overflow: hidden;
             text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .stats {
+        .champ-accent {
+            color: #fff;
+        }
+
+        .stat-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
@@ -91,107 +127,118 @@
         .stat-item {
             display: flex;
             flex-direction: column;
-            gap: 2px;
         }
 
-        .label {
-            font-size: 10px;
-            color: var(--text-secondary);
-            font-weight: 500;
+        .stat-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--text-dim);
         }
 
-        .value {
-            font-size: 13px;
-            color: var(--text-primary);
-            font-weight: 600;
-            font-feature-settings: "tnum";
+        .stat-value {
+            font-size: 12px;
+            font-weight: 700;
         }
 
-        .tier.s-plus {
-            color: var(--tier-s-plus);
-            text-shadow: 0 0 25px rgba(17, 170, 255, 0.6);
+        .t-a {
+            color: var(--a-tier);
         }
 
-        .tier.s {
-            color: var(--tier-s);
-            text-shadow: 0 0 20px rgba(0, 204, 153, 0.5);
+        .t-b {
+            color: var(--b-tier);
         }
 
-        .tier.a {
-            color: var(--tier-a);
+        .t-c {
+            color: var(--c-tier);
         }
 
-        .tier.b {
-            color: var(--tier-b);
+        .t-d {
+            color: var(--d-tier);
         }
 
-        .tier.c {
-            color: var(--tier-c);
-        }
-
-        .tier.d {
-            color: var(--tier-d);
-        }
-
-        .tier.na {
-            color: var(--tier-na);
+        .t-na {
+            color: var(--na-tier);
         }
     </style>
 </head>
-
 <body>
-    <div class="card" id="card">
-        <div class="header">
-            <div id="tier" class="tier">-</div>
-            <div class="tier-label">TIER</div>
+
+<div class="overlay-card" id="card">
+    <div class="section section-main">
+        <div class="section-label">증강 정보</div>
+        <div class="row-header">
+            <div id="tier" class="tier-display t-grad">S+</div>
+            <div id="name" class="name-text">Jeweled Lotus</div>
         </div>
-
-        <div id="name" class="name">-</div>
-
-        <div class="stats">
+        <div class="stat-grid">
             <div class="stat-item">
-                <span class="label">PICK RATE</span>
-                <span id="pop" class="value">-</span>
+                <span class="stat-label">픽률</span>
+                <span id="pop" class="stat-value">12.4%</span>
             </div>
             <div class="stat-item">
-                <span class="label">GAMES</span>
-                <span id="games" class="value">-</span>
+                <span class="stat-label">게임 수</span>
+                <span id="games" class="stat-value">54.1k</span>
             </div>
         </div>
     </div>
 
-    <script>
-        function getTierClass(tier) {
-            if (!tier) return 'na';
-            const t = tier.toUpperCase();
-            switch (t) {
-                case 'S+': return 's-plus';
-                case 'S': return 's';
-                case 'A': return 'a';
-                case 'B': return 'b';
-                case 'C': return 'c';
-                case 'D': return 'd';
-                default: return 'na';
+    <div class="section section-sub">
+        <div class="section-label">챔피언 시너지</div>
+        <div class="row-header">
+            <div id="champ-tier" class="tier-display t-grad">S</div>
+            <div id="champ-name" class="name-text champ-accent">Lux</div>
+        </div>
+        <div class="stat-grid">
+            <div class="stat-item">
+                <span class="stat-label">픽률</span>
+                <span id="champ-pop" class="stat-value">4.2%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">게임 수</span>
+                <span id="champ-games" class="stat-value">1.2k</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function getTierClass(tier) {
+        if (!tier) return 't-na';
+        const t = tier.toUpperCase();
+        if (t.startsWith('S')) return 't-grad';
+        const map = {'A':'t-a','B':'t-b','C':'t-c','D':'t-d'};
+        return map[t.charAt(0)] || 't-na';
+    }
+
+    window.updateCard = function (json) {
+        try {
+            const data = JSON.parse(json);
+            const tierEl = document.getElementById('tier');
+            tierEl.textContent = data.tier || '-';
+            tierEl.className = 'tier-display ' + getTierClass(data.tier);
+            document.getElementById('name').textContent = data.name || '-';
+            document.getElementById('pop').textContent = data.popularity || '-';
+            document.getElementById('games').textContent = data.games ? (data.games >= 1000 ? (data.games/1000).toFixed(1)+'k' : data.games) : '-';
+
+            const ctEl = document.getElementById('champ-tier');
+
+            if (data.champion) {
+                ctEl.textContent = data.champion.tier || '-';
+                ctEl.className = 'tier-display ' + getTierClass(data.champion.tier);
+                document.getElementById('champ-name').textContent = data.champion.name.toUpperCase() || '-';
+                document.getElementById('champ-pop').textContent = data.champion.popularity || '-';
+                document.getElementById('champ-games').textContent = data.champion.games ? (data.champion.games >= 1000 ? (data.champion.games/1000).toFixed(1)+'k' : data.champion.games) : '-';
+            } else {
+                ctEl.textContent = '-';
+                ctEl.className = 'tier-display';
+                document.getElementById('champ-name').textContent = '-';
+                document.getElementById('champ-pop').textContent = '-';
+                document.getElementById('champ-games').textContent = '-';
             }
+        } catch (e) {
+            console.error('Update failed', e);
         }
-
-        window.updateCard = function (json) {
-            try {
-                const data = JSON.parse(json);
-                const tierClass = getTierClass(data.tier);
-                const tierEl = document.getElementById('tier');
-                tierEl.textContent = data.tier || '-';
-                tierEl.className = 'tier ' + tierClass;
-
-                document.getElementById('card').className = 'card ' + tierClass;
-                document.getElementById('name').textContent = data.name || '-';
-                document.getElementById('pop').textContent = data.popularity || '-';
-                document.getElementById('games').textContent = data.games || '-';
-            } catch (e) {
-                console.error('Update failed', e);
-            }
-        };
-    </script>
+    };
+</script>
 </body>
-
 </html>

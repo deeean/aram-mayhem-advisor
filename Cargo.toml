@@ -1,6 +1,6 @@
 [package]
 name = "aram-mayhem-advisor"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 
 [dependencies]
@@ -29,3 +29,7 @@ tray-icon = "0.21.3"
 
 [build-dependencies]
 winresource = "0.1.29"
+
+[features]
+default = []
+dev = []

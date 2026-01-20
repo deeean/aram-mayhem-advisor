@@ -66,6 +66,12 @@ pub struct MayhemData {
 pub struct Augment {
     pub id: i32,
     pub name: Name,
+    #[serde(default)]
+    pub tier: Option<String>,
+    #[serde(default)]
+    pub popularity: Option<String>,
+    #[serde(default)]
+    pub games: Option<i32>,
 }
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
@@ -108,10 +114,25 @@ pub struct Champion {
 }
 
 const MAYHEM_JSON: &str = include_str!("../data/mayhem.json");
+const CHAMPIONS_JSON: &str = include_str!("../data/champions.json");
 
 pub static MAYHEM_DATA: LazyLock<MayhemData> = LazyLock::new(|| {
     serde_json::from_str(MAYHEM_JSON).unwrap()
 });
+
+#[derive(Clone, Debug, Serialize, Deserialize)]
+pub struct ChampionInfo {
+    pub name: Name,
+}
+
+pub static CHAMPIONS_DATA: LazyLock<HashMap<String, ChampionInfo>> = LazyLock::new(|| {
+    serde_json::from_str(CHAMPIONS_JSON).unwrap()
+});
+
+pub fn get_champion_name(champion_id: &str, lang: Language) -> Option<String> {
+    CHAMPIONS_DATA.get(&champion_id.to_lowercase())
+        .map(|info| info.name.get(lang).to_string())
+}
 
 impl Name {
     pub fn get(&self, lang: Language) -> &str {
